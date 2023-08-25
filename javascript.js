@@ -1,38 +1,131 @@
-let dispVal = "";
+const buttons = document.querySelectorAll("button");
+let dispVal = "0";
+let num1 = null;
+let num2 = null;
+let firstOperator = null;
+let secondOperator = null;
+let result = null;
 
-function add(num1, num2) {
-    dispVal = "";
-    return populate(num1 + num2);
+function populate() {
+    const populator = document.querySelector(".populator");
+    populator.innerText = dispVal;
 }
 
-function subtract(num1, num2) {
-    dispVal = "";
-    return populate(num1 - num2);
+populate();
+
+function clickButton() {
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function () {
+            if (buttons[i].classList.contains("digit")) {
+                inputDigit(buttons[i].value);
+                populate();
+            }
+            else if (buttons[i].classList.contains("operator")) {
+                inputOperator(buttons[i].value);
+            }
+            else if (buttons[i].classList.contains("equals")) {
+                equals();
+            }
+            else if (buttons[i].classList.contains("clear")) {
+                clear();
+            }
+        })
+    }
 }
 
-function multiply(num1, num2) {
-    dispVal = "";
-    return populate(num1 * num2);
+clickButton();
+
+function inputDigit(digit) {
+    if (!firstOperator) {
+        if (dispVal === 0 || dispVal === "0") dispVal = digit;
+        else if (dispVal === num1) dispVal = digit;
+        else dispVal += digit;
+    }
+    else {
+        if (dispVal === num1) dispVal = digit;
+        else dispVal += digit;
+    }
 }
 
-function divide(num1, num2) {
-    dispVal = "";
-    return populate(num1 / num2);
+function inputOperator(operator) {
+    if (firstOperator && !secondOperator) {
+        secondOperator = operator;
+        num2 = dispVal;
+        result = operate(Number(num1), Number(num2), firstOperator);
+        if (!Number.isInteger(result) && result !== "error") {
+            dispVal = result.toFixed(3);
+        }
+        else dispVal = result;
+        populate();
+        num1 = dispVal;
+        result = null;
+    }
+    else if (firstOperator && secondOperator) {
+        num2 = dispVal;
+        result = operate(Number(num1), Number(num2), secondOperator);
+        secondOperator = operator;
+        if (!Number.isInteger(result) && result !== "error") {
+            dispVal = result.toFixed(3);
+        }
+        else dispVal = result;
+        populate();
+        num1 = dispVal;
+        result = null;
+    }
+    else {
+        firstOperator = operator;
+        num1 = dispVal;
+    }
 }
 
-function operate() {
-    let op = dispVal.split(" ");
-    let num1 = op[0];
-    let operator = op[1];
-    let num2 = op[2];
-    if (operator == '+') return add(num1, num2);
-    if (operator == '-') return subtract(num1, num2);
-    if (operator == '*') return multiply(num1, num2);
-    if (operator == '/') return divide(num1, num2);
+function operate(x, y, op) {
+    if (op === "+") return x + y;
+    else if (op === "-") return x - y;
+    else if (op === "*") return x * y;
+    else if (op === "/") {
+        if (y === 0) return "error";
+        else return x / y;
+    };
 }
 
-function populate(str) {
-    let populator = document.querySelector(".populator");
-    dispVal = dispVal.concat(str);
-    populator.textContent = dispVal;
+function equals() {
+    if (!firstOperator) dispVal = dispVal;
+    else if (!secondOperator) {
+        num2 = dispVal;
+        result = operate(Number(num1), Number(num2), firstOperator);
+        if (!Number.isInteger(result) && result !== "error") {
+            dispVal = result.toFixed(3);
+        }
+        else dispVal = result;
+        populate();
+        num1 = dispVal;
+        result = null;
+        num2 = null;
+        firstOperator = null;
+        secondOperator = null;
+    }
+    else {
+        num2 = dispVal;
+        result = operate(Number(num1), Number(num2), secondOperator);
+        if (!Number.isInteger(result) && result !== "error") {
+            dispVal = result.toFixed(3);
+        }
+        else dispVal = result;
+        populate();
+        num1 = dispVal;
+        result = null;
+        num2 = null;
+        firstOperator = null;
+        secondOperator = null;
+    }
+}
+
+function clear() {
+    dispVal = "0";
+    num1 = null;
+    num2 = null;
+    firstOperator = null;
+    secondOperator = null;
+    result = null;
+    populate();
 }
