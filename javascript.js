@@ -13,6 +13,31 @@ function populate() {
 
 populate();
 
+function handleKey(event) {
+    let key = event.key;
+    for (let i = 0; i <= 9; i++) {
+        if (Number(key) === i) {
+            inputDigit(key);
+            populate();
+        };
+    }
+    if (key === "Backspace") backspace();
+    else if (key === "+" ||
+        key === "-" ||
+        key === "*") inputOperator(key);
+    else if (key === "/") {
+        event.preventDefault();
+        inputOperator(key);
+    }
+    else if (key === "=") equals();
+    else if (key === ".") {
+        inputDigit(key);
+        populate();
+    }
+  }
+
+window.addEventListener("keydown", handleKey);
+
 function clickButton() {
     for (let i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener("click", function () {
@@ -27,7 +52,10 @@ function clickButton() {
                 equals();
             }
             else if (buttons[i].classList.contains("clear")) {
-                clear();
+                backspace();
+            }
+            else if (buttons[i].classList.contains("all-clear")) {
+                allClear();
             }
         })
     }
@@ -36,14 +64,21 @@ function clickButton() {
 clickButton();
 
 function inputDigit(digit) {
-    if (!firstOperator) {
-        if (dispVal === 0 || dispVal === "0") dispVal = digit;
-        else if (dispVal === num1) dispVal = digit;
+    if (digit === ".") {
+        if (dispVal === 0 || dispVal === "0") dispVal = "0."
+        else if (dispVal.includes(".")) dispVal = dispVal;
         else dispVal += digit;
     }
     else {
-        if (dispVal === num1) dispVal = digit;
-        else dispVal += digit;
+        if (!firstOperator) {
+            if (dispVal === 0 || dispVal === "0") dispVal = digit;
+            else if (dispVal === num1) dispVal = digit;
+            else dispVal += digit;
+        }
+        else {
+            if (dispVal === num1) dispVal = digit;
+            else dispVal += digit;
+        }
     }
 }
 
@@ -120,7 +155,13 @@ function equals() {
     }
 }
 
-function clear() {
+function backspace() {
+    dispVal = dispVal.slice(0, -1);
+    if (dispVal === "") dispVal = "0";
+    populate();
+}
+
+function allClear() {
     dispVal = "0";
     num1 = null;
     num2 = null;
