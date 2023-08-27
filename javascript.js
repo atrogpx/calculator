@@ -87,8 +87,8 @@ function inputOperator(operator) {
         secondOperator = operator;
         num2 = dispVal;
         result = operate(Number(num1), Number(num2), firstOperator);
-        if (!Number.isInteger(result) && result !== "error") {
-            dispVal = result.toFixed(3);
+        if (result !== "error") {
+            dispVal = +result.toFixed(3);
         }
         else dispVal = result;
         populate();
@@ -99,8 +99,8 @@ function inputOperator(operator) {
         num2 = dispVal;
         result = operate(Number(num1), Number(num2), secondOperator);
         secondOperator = operator;
-        if (!Number.isInteger(result) && result !== "error") {
-            dispVal = result.toFixed(3);
+        if (result !== "error") {
+            dispVal = +result.toFixed(3);
         }
         else dispVal = result;
         populate();
@@ -128,8 +128,8 @@ function equals() {
     else if (!secondOperator) {
         num2 = dispVal;
         result = operate(Number(num1), Number(num2), firstOperator);
-        if (!Number.isInteger(result) && result !== "error") {
-            dispVal = result.toFixed(3);
+        if (result !== "error") {
+            dispVal = +result.toFixed(3);
         }
         else dispVal = result;
         populate();
@@ -142,8 +142,8 @@ function equals() {
     else {
         num2 = dispVal;
         result = operate(Number(num1), Number(num2), secondOperator);
-        if (!Number.isInteger(result) && result !== "error") {
-            dispVal = result.toFixed(3);
+        if (result !== "error") {
+            dispVal = +result.toFixed(3);
         }
         else dispVal = result;
         populate();
@@ -156,7 +156,7 @@ function equals() {
 }
 
 function backspace() {
-    dispVal = dispVal.slice(0, -1);
+    dispVal = dispVal.toString().slice(0, -1);
     if (dispVal === "") dispVal = "0";
     populate();
 }
