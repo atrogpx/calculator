@@ -4,7 +4,6 @@ html, body {
     align-items: center;
     justify-content: center;
     background-color: black;
-    color: white;
 }
 
 * {
@@ -33,6 +32,10 @@ html, body {
     grid-template-columns: repeat(4, auto);
     grid-template-rows: repeat(5, auto);
     gap: 20px;
+}
+
+button {
+  border: none;
 }
 
 .digit, .function, .populator {
